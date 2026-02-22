@@ -64,7 +64,11 @@ export default function InsightsPanel() {
   );
 
   const handleInsightClick = (insight: Insight) => {
-    if (insight.relatedItemId) {
+    if (insight.relatedItemId && insight.relatedBoardId) {
+      // Set the item to open, then navigate to the board where the modal will render
+      setSelectedItemId(insight.relatedItemId);
+      router.push(`/board/${insight.relatedBoardId}`);
+    } else if (insight.relatedItemId) {
       setSelectedItemId(insight.relatedItemId);
     } else if (insight.relatedBoardId) {
       router.push(`/board/${insight.relatedBoardId}`);
