@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useGoogleStore } from '@/store/googleStore';
 import { useBoardStore } from '@/store/boardStore';
-import { RefreshCw, Plus, Mail, ExternalLink } from 'lucide-react';
+import { useCurrentPerson } from '@/hooks/usePeople';
+import { RefreshCw, Plus, Mail, ExternalLink, Check } from 'lucide-react';
 
 export default function GmailPanel() {
   const isConnected = useGoogleStore((s) => s.isConnected);
@@ -16,6 +18,8 @@ export default function GmailPanel() {
   const boards = useBoardStore((s) => s.boards);
   const addItem = useBoardStore((s) => s.addItem);
   const updateItemValue = useBoardStore((s) => s.updateItemValue);
+  const router = useRouter();
+  const currentPerson = useCurrentPerson();
 
   useEffect(() => {
     if (isConnected) {
@@ -24,6 +28,7 @@ export default function GmailPanel() {
   }, [isConnected, fetchEmails]);
 
   const [createdSubject, setCreatedSubject] = useState<string | null>(null);
+  const [createdBoardId, setCreatedBoardId] = useState<string | null>(null);
 
   const handleCreateTask = (subject: string) => {
     // Add task to the first group of the first board
@@ -31,7 +36,8 @@ export default function GmailPanel() {
       alert('Create a board first before adding tasks from emails.');
       return;
     }
-    const firstBoard = boards[boardOrder[0]];
+    const boardId = boardOrder[0];
+    const firstBoard = boards[boardId];
     if (!firstBoard || firstBoard.groupIds.length === 0) return;
     const firstGroupId = firstBoard.groupIds[0];
     const nameCol = firstBoard.columns[0];
@@ -39,8 +45,16 @@ export default function GmailPanel() {
 
     const itemId = addItem(firstGroupId);
     updateItemValue(itemId, nameCol.id, `[Email] ${subject}`);
+
+    // Auto-assign to current user if there's a person column
+    const personCol = firstBoard.columns.find((c) => c.type === 'person');
+    if (personCol) {
+      updateItemValue(itemId, personCol.id, currentPerson);
+    }
+
     setCreatedSubject(subject);
-    setTimeout(() => setCreatedSubject(null), 3000);
+    setCreatedBoardId(boardId);
+    setTimeout(() => { setCreatedSubject(null); setCreatedBoardId(null); }, 4000);
   };
 
   const formatDate = (dateStr: string) => {
@@ -192,8 +206,17 @@ export default function GmailPanel() {
 
       {/* Success toast */}
       {createdSubject && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#00C875] text-white text-[13px] font-medium px-4 py-2 rounded-lg shadow-lg z-10 whitespace-nowrap">
-          Task created from email
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#00C875] text-white text-[13px] font-medium px-4 py-2 rounded-lg shadow-lg z-10 flex items-center gap-3 whitespace-nowrap">
+          <Check size={14} />
+          Task created
+          {createdBoardId && (
+            <button
+              onClick={() => router.push(`/board/${createdBoardId}`)}
+              className="underline hover:opacity-80"
+            >
+              View
+            </button>
+          )}
         </div>
       )}
     </div>
