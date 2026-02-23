@@ -31,7 +31,7 @@ export default function CalendarDayCell({
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
   if (day === null) {
-    return <div className="min-h-[100px] bg-[#FAFBFC] border-r border-b border-[#E6E9EF]" />;
+    return <div className="min-h-[60px] md:min-h-[100px] bg-[#FAFBFC] border-r border-b border-[#E6E9EF]" />;
   }
 
   const allItems = [
@@ -43,7 +43,7 @@ export default function CalendarDayCell({
 
   return (
     <div
-      className={`min-h-[100px] border-r border-b border-[#E6E9EF] p-1 relative ${
+      className={`min-h-[60px] md:min-h-[100px] border-r border-b border-[#E6E9EF] p-0.5 md:p-1 relative ${
         isCurrentMonth ? 'bg-white' : 'bg-[#FAFBFC]'
       }`}
     >

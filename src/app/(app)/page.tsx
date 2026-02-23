@@ -20,7 +20,7 @@ export default function Home() {
           <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-[#6161FF] to-[#FF158A] items-center justify-center mb-4">
             <span className="text-white text-3xl font-bold">M</span>
           </div>
-          <h1 className="text-[32px] font-bold text-[#323338] mb-2">Welcome to MockMonday</h1>
+          <h1 className="text-[24px] md:text-[32px] font-bold text-[#323338] mb-2">Welcome to MockMonday</h1>
           <p className="text-[16px] text-[#676879]">
             Select a board from the sidebar or create a new one to get started.
           </p>

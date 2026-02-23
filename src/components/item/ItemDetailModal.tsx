@@ -54,7 +54,7 @@ export default function ItemDetailModal() {
   return (
     <>
       <div className="fixed inset-0 bg-black/30 z-50" onClick={handleClose} />
-      <div className="fixed right-0 top-0 bottom-0 w-[640px] max-w-[90vw] bg-white shadow-2xl z-50 flex flex-col">
+      <div className="fixed inset-0 md:inset-auto md:right-0 md:top-0 md:bottom-0 w-full md:w-[640px] md:max-w-[90vw] bg-white shadow-2xl z-50 flex flex-col">
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-4 border-b border-[#E6E9EF] shrink-0">
           <div className="w-3 h-3 rounded-full shrink-0" style={{ background: group?.color || '#C4C4C4' }} />
@@ -88,7 +88,7 @@ export default function ItemDetailModal() {
                 const value = item.values[col.id];
                 return (
                   <div key={col.id} className="flex items-start gap-4">
-                    <div className="w-[120px] shrink-0 text-[13px] font-medium text-[#676879] pt-2">{col.title}</div>
+                    <div className="w-[90px] md:w-[120px] shrink-0 text-[13px] font-medium text-[#676879] pt-2">{col.title}</div>
                     <div className="flex-1 min-w-0">
                       {col.type === 'text' && (
                         <input

@@ -13,6 +13,7 @@ interface CalendarViewProps {
 }
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAYS_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export default function CalendarView({ boardId }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -148,11 +149,11 @@ export default function CalendarView({ boardId }: CalendarViewProps) {
   }, [year, month, startOffset, totalCells, todayStr]);
 
   return (
-    <div className="flex-1 overflow-auto px-8 py-4">
+    <div className="flex-1 overflow-auto px-3 md:px-8 py-4">
       {/* Navigation */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <h2 className="text-[20px] font-semibold text-[#323338]">{monthLabel}</h2>
+      <div className="flex items-center justify-between mb-3 md:mb-4">
+        <div className="flex items-center gap-2 md:gap-3">
+          <h2 className="text-[16px] md:text-[20px] font-semibold text-[#323338]">{monthLabel}</h2>
           <div className="flex items-center gap-1">
             <button
               onClick={goToPrev}
@@ -187,12 +188,13 @@ export default function CalendarView({ boardId }: CalendarViewProps) {
 
       {/* Day headers */}
       <div className="grid grid-cols-7 border-t border-l border-[#E6E9EF]">
-        {DAYS.map((d) => (
+        {DAYS.map((d, i) => (
           <div
             key={d}
-            className="text-[12px] font-medium text-[#676879] text-center py-2 border-r border-b border-[#E6E9EF] bg-[#F6F7FB]"
+            className="text-[11px] md:text-[12px] font-medium text-[#676879] text-center py-1.5 md:py-2 border-r border-b border-[#E6E9EF] bg-[#F6F7FB]"
           >
-            {d}
+            <span className="hidden md:inline">{d}</span>
+            <span className="md:hidden">{DAYS_SHORT[i]}</span>
           </div>
         ))}
       </div>

@@ -216,7 +216,7 @@ export default function KanbanBoard({ boardId }: KanbanBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex-1 overflow-x-auto overflow-y-hidden px-8 py-4">
+      <div className="flex-1 overflow-x-auto overflow-y-hidden px-3 md:px-8 py-4">
         {hasFilters && filteredCount < totalItemCount && (
           <div className="mb-3 px-3 py-2 bg-[#F0F0FF] rounded-lg text-[13px] text-[#6161FF] inline-flex items-center gap-1.5">
             Showing {filteredCount} of {totalItemCount} items

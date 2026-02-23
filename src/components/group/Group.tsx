@@ -161,55 +161,58 @@ export default function Group({ groupId, columns, dragHandleProps }: GroupProps)
         </div>
       </div>
 
-      {/* Column headers */}
+      {/* Column headers + Items (horizontally scrollable on mobile) */}
       {!group.collapsed && (
-        <div className="flex items-stretch h-[36px] bg-white border-b border-t border-[#D0D4E4]">
-          <div className="w-[6px] shrink-0 rounded-tl-md" style={{ background: group.color }} />
-          <div className="w-[28px] shrink-0" />
-          {columns.map((col) => (
-            <ColumnHeader key={col.id} column={col} boardId={group.boardId} />
-          ))}
-          <AddColumnButton boardId={group.boardId} />
-          <div className="flex-1" />
-        </div>
-      )}
-
-      {/* Items */}
-      {!group.collapsed && (
-        <div ref={setDropRef}>
-          <SortableContext items={filteredItemIds} strategy={verticalListSortingStrategy}>
-            {filteredItemIds.map((itemId) => (
-              <SortableItem
-                key={itemId}
-                itemId={itemId}
-                columns={columns}
-                groupColor={group.color}
-              />
-            ))}
-          </SortableContext>
-
-          {filteredItemIds.length === 0 && filtersActive && totalItems > 0 && (
-            <div className="flex items-center h-[38px] border-b border-[#E6E9EF] px-10 text-[13px] text-[#C5C7D0] italic">
-              {hiddenCount} item{hiddenCount === 1 ? '' : 's'} hidden by filters
+        <div className="overflow-x-auto">
+          <div className="min-w-fit">
+            {/* Column headers */}
+            <div className="flex items-stretch h-[36px] bg-white border-b border-t border-[#D0D4E4]">
+              <div className="w-[6px] shrink-0 rounded-tl-md" style={{ background: group.color }} />
+              <div className="w-[28px] shrink-0" />
+              {columns.map((col) => (
+                <ColumnHeader key={col.id} column={col} boardId={group.boardId} />
+              ))}
+              <AddColumnButton boardId={group.boardId} />
+              <div className="flex-1" />
             </div>
-          )}
 
-          {filteredItemIds.length === 0 && !filtersActive && totalItems === 0 && (
-            <div className="flex items-center h-[38px] border-b border-[#E6E9EF] px-10 text-[13px] text-[#C5C7D0] italic">
-              No items yet — click "+ Add item" below
+            {/* Items */}
+            <div ref={setDropRef}>
+              <SortableContext items={filteredItemIds} strategy={verticalListSortingStrategy}>
+                {filteredItemIds.map((itemId) => (
+                  <SortableItem
+                    key={itemId}
+                    itemId={itemId}
+                    columns={columns}
+                    groupColor={group.color}
+                  />
+                ))}
+              </SortableContext>
+
+              {filteredItemIds.length === 0 && filtersActive && totalItems > 0 && (
+                <div className="flex items-center h-[38px] border-b border-[#E6E9EF] px-10 text-[13px] text-[#C5C7D0] italic">
+                  {hiddenCount} item{hiddenCount === 1 ? '' : 's'} hidden by filters
+                </div>
+              )}
+
+              {filteredItemIds.length === 0 && !filtersActive && totalItems === 0 && (
+                <div className="flex items-center h-[38px] border-b border-[#E6E9EF] px-10 text-[13px] text-[#C5C7D0] italic">
+                  No items yet — click &quot;+ Add item&quot; below
+                </div>
+              )}
+
+              {/* Add item footer */}
+              <div className="flex items-center h-[38px] border-b border-[#E6E9EF] cursor-pointer hover:bg-[#F5F6F8] transition-colors">
+                <div className="w-[6px] shrink-0 rounded-bl-md" style={{ background: group.color }} />
+                <button
+                  onClick={handleAddItem}
+                  className="flex items-center gap-1 px-3 h-full text-[14px] text-[#C5C7D0] hover:text-[#676879] transition-colors"
+                >
+                  <Plus size={16} />
+                  <span>Add item</span>
+                </button>
+              </div>
             </div>
-          )}
-
-          {/* Add item footer */}
-          <div className="flex items-center h-[38px] border-b border-[#E6E9EF] cursor-pointer hover:bg-[#F5F6F8] transition-colors">
-            <div className="w-[6px] shrink-0 rounded-bl-md" style={{ background: group.color }} />
-            <button
-              onClick={handleAddItem}
-              className="flex items-center gap-1 px-3 h-full text-[14px] text-[#C5C7D0] hover:text-[#676879] transition-colors"
-            >
-              <Plus size={16} />
-              <span>Add item</span>
-            </button>
           </div>
         </div>
       )}

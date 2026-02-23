@@ -92,7 +92,7 @@ export default function TemplatePickerModal({ onClose }: { onClose: () => void }
                 className="w-full px-4 py-2.5 text-[14px] border border-[#D0D4E4] rounded-lg outline-none focus:border-[#6161FF] transition-colors" />
             </div>
             <label className="block text-[13px] font-medium text-[#323338] mb-2">Choose a template</label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {TEMPLATES.map((t) => (
                 <button key={t.id} onClick={() => setSelected(t.id)}
                   className={`flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-colors ${selected === t.id ? 'border-[#6161FF] bg-[#F0F0FF]' : 'border-[#E6E9EF] hover:border-[#D0D4E4] hover:bg-[#F6F7FB]'}`}>

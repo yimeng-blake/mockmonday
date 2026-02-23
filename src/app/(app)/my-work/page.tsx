@@ -57,7 +57,7 @@ export default function MyWorkPage() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-8 pt-8 pb-4">
+      <div className="px-4 md:px-8 pt-4 md:pt-8 pb-4">
         <div className="flex items-center gap-4">
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-semibold"
@@ -66,7 +66,7 @@ export default function MyWorkPage() {
             {getInitials(currentPerson.name)}
           </div>
           <div>
-            <h1 className="text-[28px] font-bold text-[#323338]">My Work</h1>
+            <h1 className="text-[22px] md:text-[28px] font-bold text-[#323338]">My Work</h1>
             <p className="text-[14px] text-[#676879]">
               {totalItems} {totalItems === 1 ? 'item' : 'items'} assigned to {currentPerson.name}
             </p>
@@ -75,7 +75,7 @@ export default function MyWorkPage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-8 pb-8">
+      <div className="flex-1 overflow-y-auto px-4 md:px-8 pb-8">
         {myItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-16 h-16 rounded-full bg-[#F0F0FF] flex items-center justify-center mb-4">
@@ -109,35 +109,39 @@ export default function MyWorkPage() {
                   </span>
                 </button>
 
-                {/* Column headers */}
-                <div className="flex items-stretch border-b border-t border-[#E6E9EF] bg-[#F5F6F8] h-[36px]">
-                  <div className="w-[6px] shrink-0" />
-                  <div className="w-[28px] shrink-0" />
-                  {boardGroup.columns.map((col) => (
-                    <div
-                      key={col.id}
-                      className="border-r border-[#E6E9EF] shrink-0 flex items-center justify-center text-[13px] font-medium text-[#323338]"
-                      style={{ width: col.width || 150 }}
-                    >
-                      {col.title}
+                {/* Column headers + Items (scrollable on mobile) */}
+                <div className="overflow-x-auto">
+                  <div className="min-w-fit">
+                    <div className="flex items-stretch border-b border-t border-[#E6E9EF] bg-[#F5F6F8] h-[36px]">
+                      <div className="w-[6px] shrink-0" />
+                      <div className="w-[28px] shrink-0" />
+                      {boardGroup.columns.map((col) => (
+                        <div
+                          key={col.id}
+                          className="border-r border-[#E6E9EF] shrink-0 flex items-center justify-center text-[13px] font-medium text-[#323338]"
+                          style={{ width: col.width || 150 }}
+                        >
+                          {col.title}
+                        </div>
+                      ))}
+                      <div className="w-[40px] shrink-0" />
+                      <div className="flex-1" />
                     </div>
-                  ))}
-                  <div className="w-[40px] shrink-0" />
-                  <div className="flex-1" />
-                </div>
 
-                {/* Items */}
-                {boardGroup.items.map((item) => {
-                  const group = groups[item.groupId];
-                  return (
-                    <ItemRow
-                      key={item.id}
-                      itemId={item.id}
-                      columns={boardGroup.columns}
-                      groupColor={group?.color || '#579BFC'}
-                    />
-                  );
-                })}
+                    {/* Items */}
+                    {boardGroup.items.map((item) => {
+                      const group = groups[item.groupId];
+                      return (
+                        <ItemRow
+                          key={item.id}
+                          itemId={item.id}
+                          columns={boardGroup.columns}
+                          groupColor={group?.color || '#579BFC'}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

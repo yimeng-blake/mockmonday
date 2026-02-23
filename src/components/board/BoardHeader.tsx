@@ -41,7 +41,7 @@ export default function BoardHeader({ boardId }: { boardId: string }) {
   };
 
   return (
-    <div className="px-8 pt-6 pb-2">
+    <div className="px-4 md:px-8 pt-4 md:pt-6 pb-2">
       {editing ? (
         <input
           value={name}
@@ -52,13 +52,13 @@ export default function BoardHeader({ boardId }: { boardId: string }) {
             if (e.key === 'Escape') setEditing(false);
           }}
           autoFocus
-          className="text-[28px] font-bold text-[#323338] bg-transparent border-none outline-none w-full"
+          className="text-[22px] md:text-[28px] font-bold text-[#323338] bg-transparent border-none outline-none w-full"
           style={{ lineHeight: '36px' }}
         />
       ) : (
         <h1
           onClick={handleStartEdit}
-          className="text-[28px] font-bold text-[#323338] cursor-pointer hover:text-[#6161FF] transition-colors"
+          className="text-[22px] md:text-[28px] font-bold text-[#323338] cursor-pointer hover:text-[#6161FF] transition-colors"
           style={{ lineHeight: '36px' }}
         >
           {board.name}

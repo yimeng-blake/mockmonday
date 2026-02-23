@@ -26,7 +26,7 @@ export default function KanbanColumn({
 
   return (
     <div
-      className={`flex flex-col w-[280px] shrink-0 rounded-lg transition-colors ${
+      className={`flex flex-col w-[240px] md:w-[280px] shrink-0 rounded-lg transition-colors ${
         isOver ? 'bg-[#ECEDF5]' : 'bg-[#F6F7FB]'
       }`}
     >

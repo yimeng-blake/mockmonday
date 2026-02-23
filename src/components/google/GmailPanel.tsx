@@ -94,7 +94,7 @@ export default function GmailPanel() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header actions */}
-      <div className="flex items-center justify-between px-8 py-3 border-b border-[#E6E9EF]">
+      <div className="flex items-center justify-between px-4 md:px-8 py-3 border-b border-[#E6E9EF]">
         <span className="text-[13px] text-[#676879]">
           {emails.length} email{emails.length !== 1 ? 's' : ''}
         </span>
@@ -109,7 +109,7 @@ export default function GmailPanel() {
       </div>
 
       {emailsError && (
-        <div className="px-8 py-2 bg-[#FFF0F0] text-[13px] text-[#E2445C]">
+        <div className="px-4 md:px-8 py-2 bg-[#FFF0F0] text-[13px] text-[#E2445C]">
           {emailsError}
         </div>
       )}
@@ -128,7 +128,7 @@ export default function GmailPanel() {
           emails.map((email) => (
             <div
               key={email.id}
-              className={`flex items-start gap-3 px-8 py-3 border-b border-[#F0F1F3] hover:bg-[#F6F7FB] transition-colors ${
+              className={`flex items-start gap-3 px-4 md:px-8 py-3 border-b border-[#F0F1F3] hover:bg-[#F6F7FB] transition-colors ${
                 email.isUnread ? 'bg-[#FAFBFF]' : ''
               }`}
             >

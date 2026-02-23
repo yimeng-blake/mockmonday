@@ -224,7 +224,7 @@ export default function BoardContent({ boardId }: BoardContentProps) {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex-1 overflow-auto px-8 py-4">
+          <div className="flex-1 overflow-auto px-2 md:px-8 py-4">
             <SortableContext
               items={groupDragIds}
               strategy={verticalListSortingStrategy}
