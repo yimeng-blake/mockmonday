@@ -128,7 +128,7 @@ export default function GmailPanel() {
           emails.map((email) => (
             <div
               key={email.id}
-              className={`flex items-start gap-3 px-4 md:px-8 py-3 border-b border-[#F0F1F3] hover:bg-[#F6F7FB] transition-colors ${
+              className={`group flex items-start gap-3 px-4 md:px-8 py-3 border-b border-[#F0F1F3] hover:bg-[#F6F7FB] transition-colors ${
                 email.isUnread ? 'bg-[#FAFBFF]' : ''
               }`}
             >
@@ -160,7 +160,7 @@ export default function GmailPanel() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 mt-1">
+              <div className="flex items-center gap-1 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 mt-1">
                 <button
                   onClick={() => handleCreateTask(email.subject)}
                   className="p-1.5 rounded hover:bg-[#E6E9EF] text-[#9699A6] hover:text-[#6161FF] transition-colors"
