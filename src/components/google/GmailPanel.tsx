@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGoogleStore } from '@/store/googleStore';
 import { useBoardStore } from '@/store/boardStore';
 import { RefreshCw, Plus, Mail, ExternalLink } from 'lucide-react';
@@ -23,9 +23,14 @@ export default function GmailPanel() {
     }
   }, [isConnected, fetchEmails]);
 
+  const [createdSubject, setCreatedSubject] = useState<string | null>(null);
+
   const handleCreateTask = (subject: string) => {
     // Add task to the first group of the first board
-    if (boardOrder.length === 0) return;
+    if (boardOrder.length === 0) {
+      alert('Create a board first before adding tasks from emails.');
+      return;
+    }
     const firstBoard = boards[boardOrder[0]];
     if (!firstBoard || firstBoard.groupIds.length === 0) return;
     const firstGroupId = firstBoard.groupIds[0];
@@ -34,6 +39,8 @@ export default function GmailPanel() {
 
     const itemId = addItem(firstGroupId);
     updateItemValue(itemId, nameCol.id, `[Email] ${subject}`);
+    setCreatedSubject(subject);
+    setTimeout(() => setCreatedSubject(null), 3000);
   };
 
   const formatDate = (dateStr: string) => {
@@ -92,7 +99,7 @@ export default function GmailPanel() {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden relative">
       {/* Header actions */}
       <div className="flex items-center justify-between px-4 md:px-8 py-3 border-b border-[#E6E9EF]">
         <span className="text-[13px] text-[#676879]">
@@ -182,6 +189,13 @@ export default function GmailPanel() {
           ))
         )}
       </div>
+
+      {/* Success toast */}
+      {createdSubject && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#00C875] text-white text-[13px] font-medium px-4 py-2 rounded-lg shadow-lg z-10 whitespace-nowrap">
+          Task created from email
+        </div>
+      )}
     </div>
   );
 }
