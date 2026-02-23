@@ -163,3 +163,18 @@ export async function createItemUpdate(itemId: string, userId: string, content: 
   if (error) throw error;
   return data;
 }
+
+export async function deleteItemUpdate(id: string) {
+  const { error } = await supabase().from('item_updates').delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function fetchItemUpdatesForItem(itemId: string) {
+  const { data, error } = await supabase()
+    .from('item_updates')
+    .select('*, profiles(display_name, avatar_color)')
+    .eq('item_id', itemId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}

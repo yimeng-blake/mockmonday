@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useBoardStore } from '@/store/boardStore';
 import { useUIStore } from '@/store/uiStore';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -30,8 +30,16 @@ export default function ItemDetailModal() {
   const comments = useCommentsStore((s) => s.comments[selectedItemId || ''] ?? EMPTY_COMMENTS);
   const addComment = useCommentsStore((s) => s.addComment);
   const deleteComment = useCommentsStore((s) => s.deleteComment);
+  const fetchComments = useCommentsStore((s) => s.fetchComments);
   const [activeTab, setActiveTab] = useState<'details' | 'updates'>('details');
   const [updateText, setUpdateText] = useState('');
+
+  // Fetch comments from Supabase when modal opens
+  useEffect(() => {
+    if (selectedItemId) {
+      fetchComments(selectedItemId);
+    }
+  }, [selectedItemId, fetchComments]);
 
   const subitems = selectedItemId
     ? Object.values(items).filter((i) => i.parentItemId === selectedItemId)
@@ -178,12 +186,15 @@ export default function ItemDetailModal() {
                   <button
                     onClick={() => {
                       if (updateText.trim() && selectedItemId) {
+                        const userId = user?.id || currentPerson.id;
+                        const userName = user?.email || currentPerson.name;
+                        const userAvatar = currentPerson.avatarColor;
                         addComment(
                           selectedItemId,
                           updateText.trim(),
-                          currentPerson.id,
-                          currentPerson.name,
-                          currentPerson.avatarColor
+                          userId,
+                          userName,
+                          userAvatar
                         );
                         setUpdateText('');
                       }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useBoardStore } from '@/store/boardStore';
 import { useUIStore } from '@/store/uiStore';
 import Group from '@/components/group/Group';
@@ -10,6 +10,7 @@ import CalendarView from '@/components/calendar/CalendarView';
 import { isStatusValue } from '@/lib/utils';
 import { STATUS_OPTIONS, PRIORITY_OPTIONS } from '@/lib/constants';
 import { Plus, GripVertical } from 'lucide-react';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import {
   DndContext,
   DragOverlay,
@@ -78,6 +79,28 @@ export default function BoardContent({ boardId }: BoardContentProps) {
   const currentView = useUIStore((s) => s.currentView);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [dragType, setDragType] = useState<'item' | 'group' | null>(null);
+  const realtimeChannelRef = useRef<RealtimeChannel | null>(null);
+
+  // Subscribe to realtime changes for this board
+  useEffect(() => {
+    let cancelled = false;
+    import('@/lib/supabase/realtime').then(({ subscribeToBoardChanges, unsubscribe }) => {
+      if (cancelled) return;
+      // Unsubscribe from previous board if any
+      if (realtimeChannelRef.current) {
+        unsubscribe(realtimeChannelRef.current);
+      }
+      realtimeChannelRef.current = subscribeToBoardChanges(boardId);
+    });
+
+    return () => {
+      cancelled = true;
+      import('@/lib/supabase/realtime').then(({ unsubscribe }) => {
+        unsubscribe(realtimeChannelRef.current);
+        realtimeChannelRef.current = null;
+      });
+    };
+  }, [boardId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useBoardStore, enableSupabase } from '@/store/boardStore';
 import { useGoogleStore } from '@/store/googleStore';
 import { isSupabaseConfigured } from '@/lib/supabase/client';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export default function StoreProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const { user, loading: authLoading, isConfigured } = useAuth();
+  const globalChannelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     if (isConfigured && authLoading) return;
@@ -20,13 +22,32 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
       // Dynamic import to avoid loading queries when Supabase isn't configured
       import('@/lib/supabase/queries')
         .then(({ fetchBoardsForUser }) => fetchBoardsForUser(user.id))
-        .then((data) => {
+        .then(async (data) => {
           if (data.boardOrder.length > 0) {
             useBoardStore.getState().initialize(data);
           } else {
-            useBoardStore.getState().initialize(useBoardStore.getState());
+            // New user — seed demo boards into Supabase
+            try {
+              const { seedUserBoards } = await import('@/lib/supabase/seedUser');
+              await seedUserBoards(user.id);
+              // Re-fetch after seeding to get properly structured data
+              const { fetchBoardsForUser } = await import('@/lib/supabase/queries');
+              const seededData = await fetchBoardsForUser(user.id);
+              useBoardStore.getState().initialize(
+                seededData.boardOrder.length > 0 ? seededData : useBoardStore.getState()
+              );
+            } catch (err) {
+              console.error('Failed to seed boards:', err);
+              // Fallback to localStorage seed
+              useBoardStore.getState().initialize(useBoardStore.getState());
+            }
           }
           setReady(true);
+
+          // Subscribe to global board changes for real-time updates
+          import('@/lib/supabase/realtime').then(({ subscribeToGlobalBoardChanges }) => {
+            globalChannelRef.current = subscribeToGlobalBoardChanges(user.id);
+          });
         })
         .catch((err) => {
           console.error('Failed to fetch boards:', err);
@@ -39,6 +60,16 @@ export default function StoreProvider({ children }: { children: ReactNode }) {
 
     // Check Google connection status (fire-and-forget, doesn't block loading)
     useGoogleStore.getState().checkConnection();
+
+    return () => {
+      // Cleanup global realtime subscription
+      if (globalChannelRef.current) {
+        import('@/lib/supabase/realtime').then(({ unsubscribe }) => {
+          unsubscribe(globalChannelRef.current);
+          globalChannelRef.current = null;
+        });
+      }
+    };
   }, [user, authLoading, isConfigured]);
 
   if (!ready) {
