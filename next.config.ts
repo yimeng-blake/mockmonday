@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  typescript: {
+    // Type checking done locally/CI; skip on resource-constrained VM
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
